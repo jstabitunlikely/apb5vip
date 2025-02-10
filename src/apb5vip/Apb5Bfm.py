@@ -14,7 +14,7 @@ class Apb5Bfm(uvm_component):
         # TODO use an interface object
         self.if_ = cocotb.top
 
-    async def wait_clk(self, cycles):
+    async def wait_cycles(self, cycles):
         assert self.if_ is not None
         await ClockCycles(self.if_.PCLK, cycles)
 
@@ -118,7 +118,7 @@ class Apb5RequesterBfm(Apb5Bfm):
         await self.read_access_phase(transfer)
 
     async def drive(self, transfer: Apb5Transfer):
-        await self.wait_clk(transfer.request_delay)
+        await self.wait_cycles(transfer.request_delay)
         match transfer.direction:
             case Direction.READ:
                 await self.read(transfer)
@@ -149,7 +149,7 @@ class Apb5CompleterBfm(Apb5Bfm):
 
     async def respond(self, response: Apb5Transfer):
         assert self.if_ is not None
-        await self.wait_clk(response.response_delay)
+        await self.wait_cycles(response.response_delay)
         self.if_.PRDATA.value = response.data
         self.if_.PSLVERR.value = response.response
         self.if_.PREADY.value = 1

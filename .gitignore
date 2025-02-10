@@ -170,3 +170,4 @@ cython_debug/
 *.vvp
 results.xml
 *.vcd
+sim_*

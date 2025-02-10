@@ -26,12 +26,9 @@ class Apb5TestBase(uvm_test):
 
     async def run_phase(self):
         self.raise_objection()
-
         completer_seqr = self.env.completer_agent.sequencer
         cocotb.start_soon(self.apb5_completer_seq.start(completer_seqr))
-
-        requester_seqr = self.env.requester_agent.sequencer
-        await self.apb5_requester_seq.start(requester_seqr)
-
-        await self.env.requester_agent.driver.bfm.wait_clk(10)
         self.drop_objection()
+
+    async def wait_cycles(self, cycles):
+        await self.env.requester_agent.driver.bfm.wait_cycles(cycles)
