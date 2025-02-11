@@ -1,11 +1,11 @@
 module b2b_tb#(
-    parameter int ADDR_WIDTH = 8,
+    parameter int ADDR_WIDTH = 32,
     parameter int DATA_WIDTH = 32,
     parameter bit RME_SUPPORT = 1,
     parameter bit WAKEUP_SUPPORT = 1,
-    parameter int USER_REQ_WIDTH = 4,
-    parameter int USER_DATA_WIDTH = 4,
-    parameter int USER_RESP_WIDTH = 4
+    parameter int USER_REQ_WIDTH = 8,
+    parameter int USER_DATA_WIDTH = 16,
+    parameter int USER_RESP_WIDTH = 8
 )();
 
     output logic PCLK;

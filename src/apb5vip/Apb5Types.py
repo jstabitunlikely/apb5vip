@@ -12,12 +12,12 @@ class Response(enum.IntEnum):
     OKAY = 0
     ERROR = 1
 
-
 @enum.unique
-class Size(enum.IntEnum):
-    BYTE = 0
-    HALFWORD = 1
-    WORD = 2
+class WakeupMode(enum.IntEnum):
+    NEVER = 0
+    WITH_SEL = 1
+    WITH_ENABLE = 2
+    # TODO other modes
 
 
 @enum.unique

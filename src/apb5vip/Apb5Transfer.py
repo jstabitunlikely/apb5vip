@@ -1,31 +1,34 @@
 import random
-from pyuvm import uvm_sequence_item
+from pyuvm import uvm_sequence_item, ConfigDB
 
 from .Apb5Types import *
+from .Apb5Interface import Apb5Interface
 
 
 class Apb5Transfer(uvm_sequence_item):
 
-    def __init__(self, name="transfer"):
+    def __init__(self, name="transfer", vif=None):
         super().__init__(name)
+
+        self.vif = vif
+        assert isinstance(self.vif, Apb5Interface)
 
         # Bus properties
 
-        # TODO get these from the DUT config
         # Address width
-        self.ADDR_WIDTH = 8
+        self.ADDR_WIDTH = self.vif.get_value("ADDR_WIDTH")
         # Data width
-        self.DATA_WIDTH = 32
+        self.DATA_WIDTH = self.vif.get_value("DATA_WIDTH")
         # User request width
-        self.USER_REQ_WIDTH = 4
+        self.USER_REQ_WIDTH = self.vif.get_value("USER_REQ_WIDTH")
         # User data width
-        self.USER_DATA_WIDTH = 4
+        self.USER_DATA_WIDTH = self.vif.get_value("USER_DATA_WIDTH")
         # User response width
-        self.USER_RESPONSE_WIDTH = 4
+        self.USER_RESP_WIDTH = self.vif.get_value("USER_RESP_WIDTH")
         # RME support
-        self.RME_SUPPORT = 1
+        self.RME_SUPPORT = self.vif.get_value("RME_SUPPORT")
         # Wakeup support
-        self.WAKEUP_SUPPORT = 1
+        self.WAKEUP_SUPPORT = self.vif.get_value("WAKEUP_SUPPORT")
 
         # Physical bus signals
 
@@ -39,8 +42,8 @@ class Apb5Transfer(uvm_sequence_item):
         self.data = 0
         # Requester: Write strobe
         self.strobe = 0
-        # Requester: Wake up
-        self.wakeup = 0
+        # Requester: Wake up mode
+        self.wakeup_mode = WakeupMode.WITH_SEL
         # Requester: User signals
         self.auser = 0
         self.wuser = 0
@@ -72,9 +75,7 @@ class Apb5Transfer(uvm_sequence_item):
 
     def randomize_request(self):
         # TODO use a constrained random library e.g. PyVSC
-        self.address = random.randint(0, 0xFF)
-        self.direction = random.choice(list(Direction))
-        self.response = random.choice(list(Response))
+        self.address = random.randint(0, 2**self.ADDR_WIDTH-1)
         self.protection.privilege = random.choice(list(Privilege))
         self.protection.transaction = random.choice(list(Transaction))
         if self.RME_SUPPORT:
@@ -82,21 +83,32 @@ class Apb5Transfer(uvm_sequence_item):
         else:
             security_domain = [Security.NONSEC, Security.SEC]
         self.protection.security = random.choice(security_domain)
+        self.direction = random.choice(list(Direction))
         if self.direction == Direction.WRITE:
-            self.strobe = random.randint(0, 0xF)
+            self.strobe = random.randint(0, 2**(self.DATA_WIDTH//8)-1)
             self.data = random.randint(0, 2**self.DATA_WIDTH-1)
+            if self.USER_DATA_WIDTH:
+                self.wuser = random.randint(0, 2**self.USER_DATA_WIDTH-1)
         else:
-            self.strobe = 0xF
+            self.strobe = 2**(self.DATA_WIDTH//8)-1
+        if self.WAKEUP_SUPPORT:
+            self.wakeup_mode = random.choice(list(WakeupMode))
+        if self.USER_REQ_WIDTH:
+            self.auser = random.randint(0, 2**self.USER_REQ_WIDTH-1)
         self.request_delay = random.randint(0, 3)
 
     def randomize_response(self):
         match self.direction:
             case Direction.READ:
                 self.data = random.randint(0, 2**self.DATA_WIDTH-1)
+                if self.USER_DATA_WIDTH:
+                    self.ruser = random.randint(0, 2**self.USER_DATA_WIDTH-1)
             case Direction.WRITE:
                 # TODO configurable behavior
                 self.data = 0
         self.response = random.choice(list(Response))
+        if self.USER_RESP_WIDTH:
+            self.buser = random.randint(0, 2**self.USER_RESP_WIDTH-1)
         self.response_delay = random.randint(0, 3)
 
     def __eq__(self, value):
@@ -109,7 +121,7 @@ class Apb5Transfer(uvm_sequence_item):
             self.direction == value.direction and
             self.data == value.data and
             self.strobe == value.strobe and
-            self.wakeup == value.wakeup and
+            self.wakeup_mode == value.wakeup_mode and
             self.auser == value.auser and
             self.wuser == value.wuser and
             self.response == value.response and
@@ -126,7 +138,7 @@ class Apb5Transfer(uvm_sequence_item):
             self.direction,
             self.data,
             self.strobe,
-            self.wakeup,
+            self.wakeup_mode,
             self.auser,
             self.wuser,
             self.response,
@@ -144,7 +156,7 @@ class Apb5Transfer(uvm_sequence_item):
             f"  Direction: {self.direction.name}",
             f"  Data: 0x{self.data:0{self._dwx}x}",
             f"  Strobe: {self.strobe:01x}",
-            f"  Wakeup: {self.wakeup}",
+            f"  Wakeup: {self.wakeup_mode}",
             f"  AUser: 0x{self.auser:08x}",
             f"  WUser: 0x{self.wuser:08x}",
             f"  Response: {self.response.name}",
