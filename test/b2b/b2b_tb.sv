@@ -27,9 +27,6 @@ module b2b_tb#(
     inout logic [USER_DATA_WIDTH-1:0] PRUSER;
     inout logic [USER_RESP_WIDTH-1:0] PBUSER;
 
-
-    assign PNSE = 'b0;
-
     initial begin
         PCLK = 0;
         PRESETN = 0;

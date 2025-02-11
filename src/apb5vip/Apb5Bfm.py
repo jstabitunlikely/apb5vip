@@ -100,7 +100,6 @@ class Apb5RequesterBfm(Apb5Bfm):
         self.if_.PSEL.value = 1
         await RisingEdge(self.if_.PCLK)
         self.if_.PENABLE.value = 1
-        # await RisingEdge(self.if_.PCLK)
 
     async def read_access_phase(self, transfer: Apb5Transfer):
         assert self.if_ is not None
