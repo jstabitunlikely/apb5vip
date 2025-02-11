@@ -1,22 +1,52 @@
-import cocotb
+from typing import Any, Callable
 
-# TODO this file is a placeholder only
-class Apb5Interface(object):
-    async def drive(self, transaction):
-        # Implement driving the transaction onto the actual hardware/simulator interface
-        print(f"Driving: {transaction}")
-        await cocotb.triggers.Timer(1, units="ns")  # Example delay
-        pass
 
-    async def capture(self, transaction):
-        # Implement capturing a transaction from the actual hardware/simulator interface
-        transaction.addr = 0x100  # Example
-        transaction.data = 0xAA
-        print("Capturing")
-        await cocotb.triggers.Timer(1, units="ns")  # Example delay
-        return transaction
+class Apb5Interface():
 
-    async def reset(self):
-        # Example reset sequence
-        await cocotb.triggers.Timer(10, units="ns")
-        pass
+    def __init__(self,
+                 clock,
+                 resetn) -> None:
+
+        # Properties
+        self.ADDR_WIDTH: Any = None
+        self.DATA_WIDTH: Any = None
+        self.RME_SUPPORT: Any = None
+        self.WAKEUP_SUPPORT: Any = None
+        self.USER_REQ_WIDTH: Any = None
+        self.USER_DATA_WIDTH: Any = None
+        self.USER_RESP_WIDTH: Any = None
+
+        # Signals
+        self.pclk = clock
+        self.presetn = resetn
+        self.pwakeup: Any = None
+        self.psel: Any = None
+        self.penable: Any = None
+        self.paddr: Any = None
+        self.pwrite: Any = None
+        self.pwdata: Any = None
+        self.pstrb: Any = None
+        self.pprot: Any = None
+        self.pnse: Any = None
+        self.prdata: Any = None
+        self.pslverr: Any = None
+        self.pready: Any = None
+        self.pauser: Any = None
+        self.pwuser: Any = None
+        self.pruser: Any = None
+        self.pbuser: Any = None
+
+    def get_value(self,
+                  signal: str,
+                  type_: Callable = int) -> Any:
+        return type_(self.__getattribute__(signal).value)
+
+
+class Apb5RequesterInterface(Apb5Interface):
+
+    pass
+
+
+class Apb5CompleterInterface(Apb5Interface):
+
+    pass
