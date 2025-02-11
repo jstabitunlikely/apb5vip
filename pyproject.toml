@@ -1,3 +1,33 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "apb5vip"
+version = "0.1.0"
+authors = [{name = "Gergo Gacs", email = "gacsgergo@gmail.com"}]
+description = "An AMBA APB5 VIP using pyuvm and cocotb"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "cocotb>=1.6.0,<2.0",
+    "pyuvm",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Hardware :: Verification",
+    "Framework :: cocotb :: UVM",
+]
+keywords = ["amba", "apb5", "vip", "verification", "cocotb", "pyuvm"]
+
+[tool.setuptools]
+packages = ["apb5vip"]
+package-dir = {""="src"}
+
 [tool.mypy]
     python_version = "3.13"
 
