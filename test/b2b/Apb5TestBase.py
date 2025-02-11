@@ -58,7 +58,6 @@ class Apb5TestBase(uvm_test):
         self.env = Apb5Env("apb5_env", self)
 
     def end_of_elaboration_phase(self):
-        self.apb5_requester_seq = Apb5Sequence("apb5_requester_seq")
         self.apb5_completer_seq = Apb5ReactiveSequence("apb5_completer_seq")
 
     async def run_phase(self):

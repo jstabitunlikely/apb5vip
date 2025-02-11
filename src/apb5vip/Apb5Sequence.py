@@ -1,5 +1,4 @@
 from pyuvm import uvm_sequence
-
 from .Apb5Transfer import Apb5Transfer
 
 
@@ -15,4 +14,3 @@ class Apb5Sequence(uvm_sequence):
             await self.start_item(transfer)
             transfer.randomize_request()
             await self.finish_item(transfer)
-            response = await self.get_response()
