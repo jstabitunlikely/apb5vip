@@ -54,6 +54,8 @@ class Apb5TestBase(uvm_test):
         self.completer_if = Apb5CompleterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
         self.connect_cocotb_to_vif(self.completer_if)
         ConfigDB().set(self, "*completer_agent*", "vif", self.completer_if)
+        # TODO use a third, passive agent to collect coverage
+        ConfigDB().set(self, "*completer_agent*", "has_coverage", True)
 
         self.env = Apb5Env("apb5_env", self)
 

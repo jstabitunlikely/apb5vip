@@ -1,20 +1,32 @@
 import cocotb
 from cocotb.triggers import RisingEdge, FallingEdge, First
-from pyuvm import uvm_monitor, uvm_analysis_port, ConfigDB
+from pyuvm import uvm_monitor, uvm_analysis_port, ConfigDB, UVMConfigItemNotFound
 
 from .Apb5Types import *
 from .Apb5Transfer import Apb5Transfer
 from .Apb5Interface import Apb5Interface
+from .Apb5CoverageCollector import Apb5CoverageCollector
 
 
 class Apb5Monitor(uvm_monitor):
+
     def __init__(self, name="monitor", agent=None):
         super().__init__(name, agent)
         self.transfer_ap = uvm_analysis_port("transfer_ap", self)
         self.request_ap = uvm_analysis_port("request_ap", self)
 
+    def build_phase(self):
+        try:
+            self.has_coverage = ConfigDB().get(None, self.get_full_name(), "has_coverage")
+        except UVMConfigItemNotFound:
+            self.has_coverage = False
+        if self.has_coverage:
+            self.coverage = Apb5CoverageCollector("coverage_collector", parent=self)
+
     def connect_phase(self):
         self.vif = ConfigDB().get(None, self.get_full_name(), "vif")
+        if self.has_coverage:
+            self.transfer_ap.connect(self.coverage.analysis_export)
 
     async def monitor_setup_phase(self, tr: Apb5Transfer):
         assert isinstance(self.vif, Apb5Interface)
