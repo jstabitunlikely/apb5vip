@@ -1,6 +1,6 @@
 module b2b_tb#(
     parameter int ADDR_WIDTH = 8,
-    parameter int DATA_WIDTH = 32,
+    parameter int DATA_WIDTH = 8,
     parameter bit RME_SUPPORT = 1,
     parameter bit WAKEUP_SUPPORT = 1,
     parameter int USER_REQ_WIDTH = 8,
