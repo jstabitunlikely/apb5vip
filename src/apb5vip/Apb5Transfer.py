@@ -103,9 +103,6 @@ class Apb5Transfer(uvm_sequence_item):
                 self.data = random.randint(0, 2**self.DATA_WIDTH-1)
                 if self.USER_DATA_WIDTH:
                     self.ruser = random.randint(0, 2**self.USER_DATA_WIDTH-1)
-            case Direction.WRITE:
-                # TODO configurable behavior
-                self.data = 0
         self.response = random.choice(list(Response))
         if self.USER_RESP_WIDTH:
             self.buser = random.randint(0, 2**self.USER_RESP_WIDTH-1)
