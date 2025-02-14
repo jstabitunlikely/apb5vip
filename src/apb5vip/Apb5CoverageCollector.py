@@ -13,6 +13,8 @@ class Apb5TransferCoverage:
 
     def define_transfer_coverage(self):
 
+        # Note: coverage definition is not complete, only a demonstration with basic cover items
+
         # Address
         bins_address_autobins = 16
         bins_address_max = 2**self.vif.ADDR_WIDTH
@@ -77,7 +79,7 @@ class Apb5TransferCoverage:
             name="transfer.data",
             xf=lambda x: x.data,
             bins=bins_data,
-            bins_labels=[f"leftmost_i{d}" if d else 0 for d in bins_data],
+            bins_labels=[f"leftmost_i{d:02d}" if d else 0 for d in bins_data],
             rel=lambda v, b: b == int(floor(log2(v))) + 1 if v else b == v
         )
 
@@ -88,6 +90,13 @@ class Apb5TransferCoverage:
             # Note: sampling condition is included in the transformation
             xf=lambda x: x.strobe if x.direction == Direction.WRITE else -1,
             bins=list(range(bins_strobe_max)),
+        )
+
+        self.cp_response = CoverPoint(
+            name="transfer.response",
+            xf=lambda x: x.response,
+            bins=list(Response),
+            bins_labels=[r.name for r in Response]
         )
 
         # Cross: Address x Direction
@@ -114,6 +123,13 @@ class Apb5TransferCoverage:
             items=["transfer.direction", "transfer.data"]
         )
 
+        # Cross: Direction x Response
+        self.cross_direction_x_response = CoverCross(
+            name="transfer.direction_x_response",
+            items=["transfer.direction", "transfer.response"]
+        )
+
+
         self.transfer_coverage = coverage_section(
             self.cp_address,
             self.cp_security,
@@ -122,10 +138,12 @@ class Apb5TransferCoverage:
             self.cp_direction,
             self.cp_strobe,
             self.cp_data,
+            self.cp_response,
             self.cross_address_x_direction,
             self.cross_security_x_privilege_x_transaction,
             self.cross_direction_x_protection,
-            self.cross_direction_x_data
+            self.cross_direction_x_data,
+            self.cross_direction_x_response,
         )
 
 class Apb5CoverageCollector(uvm_subscriber):
