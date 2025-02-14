@@ -82,11 +82,12 @@ class Apb5TransferCoverage:
         )
 
         # Strobe
+        bins_strobe_max = 2**(self.vif.DATA_WIDTH // 8)
         self.cp_strobe = CoverPoint(
             name="transfer.strobe",
             # Note: sampling condition is included in the transformation
             xf=lambda x: x.strobe if x.direction == Direction.WRITE else -1,
-            bins=list(range(0x10)),
+            bins=list(range(bins_strobe_max)),
         )
 
         # Cross: Address x Direction
