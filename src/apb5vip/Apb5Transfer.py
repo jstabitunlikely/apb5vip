@@ -16,19 +16,19 @@ class Apb5Transfer(uvm_sequence_item):
         # Bus properties
 
         # Address width
-        self.ADDR_WIDTH = self.vif.get_value("ADDR_WIDTH")
+        self.ADDR_WIDTH = self.vif.ADDR_WIDTH
         # Data width
-        self.DATA_WIDTH = self.vif.get_value("DATA_WIDTH")
+        self.DATA_WIDTH = self.vif.DATA_WIDTH
         # User request width
-        self.USER_REQ_WIDTH = self.vif.get_value("USER_REQ_WIDTH")
+        self.USER_REQ_WIDTH = self.vif.USER_REQ_WIDTH
         # User data width
-        self.USER_DATA_WIDTH = self.vif.get_value("USER_DATA_WIDTH")
+        self.USER_DATA_WIDTH = self.vif.USER_DATA_WIDTH
         # User response width
-        self.USER_RESP_WIDTH = self.vif.get_value("USER_RESP_WIDTH")
+        self.USER_RESP_WIDTH = self.vif.USER_RESP_WIDTH
         # RME support
-        self.RME_SUPPORT = self.vif.get_value("RME_SUPPORT")
+        self.RME_SUPPORT = self.vif.RME_SUPPORT
         # Wakeup support
-        self.WAKEUP_SUPPORT = self.vif.get_value("WAKEUP_SUPPORT")
+        self.WAKEUP_SUPPORT = self.vif.WAKEUP_SUPPORT
 
         # Physical bus signals
 

@@ -32,16 +32,16 @@ class Apb5RequesterBfm(Apb5Bfm):
         assert isinstance(self.vif, Apb5Interface)
         self.vif.paddr.value = 0
         self.vif.pprot.value = 0
-        if self.vif.RME_SUPPORT.value:
+        if self.vif.RME_SUPPORT:
             self.vif.pnse.value = 0
         self.vif.pwrite.value = 0
         self.vif.pwdata.value = 0
         self.vif.pstrb.value = 0
-        if self.vif.WAKEUP_SUPPORT.value:
+        if self.vif.WAKEUP_SUPPORT:
             self.vif.pwakeup.value = 0
-        if self.vif.get_value("USER_REQ_WIDTH"):
+        if self.vif.USER_REQ_WIDTH:
             self.vif.pauser.value = 0
-        if self.vif.get_value("USER_DATA_WIDTH"):
+        if self.vif.USER_DATA_WIDTH:
             self.vif.pwuser.value = 0
         self.vif.psel.value = 0
         self.vif.penable.value = 0
@@ -58,21 +58,21 @@ class Apb5RequesterBfm(Apb5Bfm):
         assert isinstance(self.vif, Apb5Interface)
         self.vif.paddr.value = transfer.address
         self.vif.pprot.value = transfer.protection.get_pprot()
-        if self.vif.RME_SUPPORT.value:
+        if self.vif.RME_SUPPORT:
             self.vif.pnse.value = transfer.protection.get_pnse()
         self.vif.pwrite.value = 1
         self.vif.pwdata.value = transfer.data
         self.vif.pstrb.value = transfer.strobe
-        if self.vif.WAKEUP_SUPPORT.value and transfer.wakeup_mode == WakeupMode.WITH_SEL:
+        if self.vif.WAKEUP_SUPPORT and transfer.wakeup_mode == WakeupMode.WITH_SEL:
             self.vif.pwakeup.value = 1
-        if self.vif.get_value("USER_REQ_WIDTH"):
+        if self.vif.USER_REQ_WIDTH:
             self.vif.pauser.value = transfer.auser
-        if self.vif.get_value("USER_DATA_WIDTH"):
+        if self.vif.USER_DATA_WIDTH:
             self.vif.pwuser.value = transfer.wuser
         self.vif.psel.value = 1
         await RisingEdge(self.vif.pclk)
         self.vif.penable.value = 1
-        if self.vif.WAKEUP_SUPPORT.value and transfer.wakeup_mode == WakeupMode.WITH_ENABLE:
+        if self.vif.WAKEUP_SUPPORT and transfer.wakeup_mode == WakeupMode.WITH_ENABLE:
             self.vif.pwakeup.value = 1
 
     async def write_access_phase(self):
@@ -82,7 +82,7 @@ class Apb5RequesterBfm(Apb5Bfm):
             await RisingEdge(self.vif.pclk)
         self.vif.psel.value = 0
         self.vif.penable.value = 0
-        if self.vif.WAKEUP_SUPPORT.value:
+        if self.vif.WAKEUP_SUPPORT:
             self.vif.pwakeup.value = 0
         # TODO drive unqualified signal values: zero, one, 'x', random or hold
 
@@ -94,18 +94,18 @@ class Apb5RequesterBfm(Apb5Bfm):
         assert isinstance(self.vif, Apb5Interface)
         self.vif.paddr.value = transfer.address
         self.vif.pprot.value = transfer.protection.get_pprot()
-        if self.vif.RME_SUPPORT.value:
+        if self.vif.RME_SUPPORT:
             self.vif.pnse.value = transfer.protection.get_pnse()
         self.vif.pwrite.value = 0
         self.vif.pstrb.value = transfer.strobe
-        if self.vif.WAKEUP_SUPPORT.value and transfer.wakeup_mode == WakeupMode.WITH_SEL:
+        if self.vif.WAKEUP_SUPPORT and transfer.wakeup_mode == WakeupMode.WITH_SEL:
             self.vif.pwakeup.value = 1
-        if self.vif.get_value("USER_REQ_WIDTH"):
+        if self.vif.USER_REQ_WIDTH:
             self.vif.pauser.value = transfer.auser
         self.vif.psel.value = 1
         await RisingEdge(self.vif.pclk)
         self.vif.penable.value = 1
-        if self.vif.WAKEUP_SUPPORT.value and transfer.wakeup_mode == WakeupMode.WITH_ENABLE:
+        if self.vif.WAKEUP_SUPPORT and transfer.wakeup_mode == WakeupMode.WITH_ENABLE:
             self.vif.pwakeup.value = 1
 
     async def read_access_phase(self, transfer: Apb5Transfer):
@@ -115,7 +115,7 @@ class Apb5RequesterBfm(Apb5Bfm):
             await RisingEdge(self.vif.pclk)
         self.vif.psel.value = 0
         self.vif.penable.value = 0
-        if self.vif.WAKEUP_SUPPORT.value:
+        if self.vif.WAKEUP_SUPPORT:
             self.vif.pwakeup.value = 0
         transfer.data = self.vif.get_value("prdata")
         transfer.response = self.vif.get_value("pslverr", Response)
@@ -142,9 +142,9 @@ class Apb5CompleterBfm(Apb5Bfm):
         self.vif.prdata.value = 0
         self.vif.pready.value = 0
         self.vif.pslverr.value = 0
-        if self.vif.get_value("USER_RESP_WIDTH"):
+        if self.vif.USER_RESP_WIDTH:
             self.vif.pbuser.value = 0
-        if self.vif.get_value("USER_DATA_WIDTH"):
+        if self.vif.USER_DATA_WIDTH:
             self.vif.pruser.value = 0
 
     async def reset(self):
@@ -160,9 +160,9 @@ class Apb5CompleterBfm(Apb5Bfm):
         await self.wait_cycles(response.response_delay)
         self.vif.prdata.value = response.data
         self.vif.pslverr.value = response.response
-        if self.vif.get_value("USER_RESP_WIDTH"):
+        if self.vif.USER_RESP_WIDTH:
             self.vif.pbuser.value = response.buser
-        if self.vif.get_value("USER_DATA_WIDTH"):
+        if self.vif.USER_DATA_WIDTH:
             self.vif.pruser.value = response.ruser
         self.vif.pready.value = 1
         await RisingEdge(self.vif.pclk)

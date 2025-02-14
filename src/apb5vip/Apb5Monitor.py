@@ -42,7 +42,7 @@ class Apb5Monitor(uvm_monitor):
         # Protection
         tr.protection.privilege = Privilege(self.vif.pprot.value[2])
         tr.protection.transaction = Transaction(self.vif.pprot.value[0])
-        if self.vif.RME_SUPPORT.value:
+        if self.vif.RME_SUPPORT:
             nse = self.vif.get_value("pnse")
         else:
             nse = 0
@@ -52,15 +52,15 @@ class Apb5Monitor(uvm_monitor):
         # Data and user data
         if tr.direction == Direction.WRITE:
             tr.data = self.vif.get_value("pwdata")
-            if self.vif.get_value("USER_DATA_WIDTH"):
+            if self.vif.USER_DATA_WIDTH:
                 tr.wuser = self.vif.get_value("pwuser")
         # Strobe
         tr.strobe = self.vif.get_value("pstrb")
         # Wakeup
-        if self.vif.WAKEUP_SUPPORT.value:
+        if self.vif.WAKEUP_SUPPORT:
             tr.wakeup_mode = self.vif.get_value("pwakeup")
         # User signals
-        if self.vif.get_value("USER_REQ_WIDTH"):
+        if self.vif.USER_REQ_WIDTH:
             tr.auser = self.vif.get_value("pauser")
 
     async def monitor_access_phase(self, tr: Apb5Transfer):
@@ -81,10 +81,10 @@ class Apb5Monitor(uvm_monitor):
         # Data and user data
         if tr.direction == Direction.READ:
             tr.data = self.vif.get_value("prdata")
-            if self.vif.get_value("USER_DATA_WIDTH"):
+            if self.vif.USER_DATA_WIDTH:
                 tr.ruser = self.vif.get_value("pruser")
         # User response
-        if self.vif.get_value("USER_RESP_WIDTH"):
+        if self.vif.USER_RESP_WIDTH:
             tr.buser = self.vif.get_value("pbuser")
 
         tr.end_tr()

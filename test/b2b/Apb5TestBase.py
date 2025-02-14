@@ -19,13 +19,13 @@ class Apb5TestBase(uvm_test):
 
     def connect_cocotb_to_vif(self, requester_if: Apb5Interface):
         assert cocotb.top is not None
-        requester_if.ADDR_WIDTH = cocotb.top.ADDR_WIDTH
-        requester_if.DATA_WIDTH = cocotb.top.DATA_WIDTH
-        requester_if.RME_SUPPORT = cocotb.top.RME_SUPPORT
-        requester_if.WAKEUP_SUPPORT = cocotb.top.WAKEUP_SUPPORT
-        requester_if.USER_REQ_WIDTH = cocotb.top.USER_REQ_WIDTH
-        requester_if.USER_DATA_WIDTH = cocotb.top.USER_DATA_WIDTH
-        requester_if.USER_RESP_WIDTH = cocotb.top.USER_RESP_WIDTH
+        requester_if.ADDR_WIDTH = int(cocotb.top.ADDR_WIDTH.value)
+        requester_if.DATA_WIDTH = int(cocotb.top.DATA_WIDTH.value)
+        requester_if.RME_SUPPORT = int(cocotb.top.RME_SUPPORT.value)
+        requester_if.WAKEUP_SUPPORT = int(cocotb.top.WAKEUP_SUPPORT.value)
+        requester_if.USER_REQ_WIDTH = int(cocotb.top.USER_REQ_WIDTH.value)
+        requester_if.USER_DATA_WIDTH = int(cocotb.top.USER_DATA_WIDTH.value)
+        requester_if.USER_RESP_WIDTH = int(cocotb.top.USER_RESP_WIDTH.value)
         requester_if.pwakeup = cocotb.top.PWAKEUP
         requester_if.psel = cocotb.top.PSEL
         requester_if.penable = cocotb.top.PENABLE

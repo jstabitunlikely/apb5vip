@@ -15,10 +15,10 @@ class Apb5TransferCoverage:
 
         # Address
         bins_address_autobins = 16
-        bins_address_max = 2**self.vif.get_value("ADDR_WIDTH")
+        bins_address_max = 2**self.vif.ADDR_WIDTH
         bins_address_step = ceil(bins_address_max / bins_address_autobins)
         # TODO: the middle ranges are a bit rough around the edges, because they include the min and max vales as
-        # well. Additionally, if ADDR_WIDTH is not divisable by autobins, values grater than maximux are also included in
+        # well. Additionally, if ADDR_WIDTH is not dividable by autobins, values grater than maximum are also included in
         # the last bin.
         bins_address = \
             [(0x0, 0x0)] + \
@@ -34,7 +34,7 @@ class Apb5TransferCoverage:
         )
 
         # Security
-        if self.vif.RME_SUPPORT.value:
+        if self.vif.RME_SUPPORT:
             bins_security = list(Security)
         else:
             bins_security = [Security.NONSEC, Security.SEC]
@@ -72,7 +72,7 @@ class Apb5TransferCoverage:
 
         # Data
         # Power-of-two coverage pattern, where each bit needs to be the leftmost '1'
-        bins_data = list(range(self.vif.get_value("DATA_WIDTH")+1))
+        bins_data = list(range(self.vif.DATA_WIDTH+1))
         self.cp_data = CoverPoint(
             name="transfer.data",
             xf=lambda x: x.data,
