@@ -37,8 +37,9 @@ make run_b2b_tb
 - [AMBA APB5 Specification](https://developer.arm.com/documentation/ihi0024/e/)
 - [PyUVM documentation](https://pyuvm.github.io/pyuvm/)
 - [Cocotb documentation](https://docs.cocotb.org/en/stable/)
+- [Cocotb-coverage documentation](https://cocotb-coverage.readthedocs.io/en/latest/tutorials.html)
 - [Icarus Verilog documentation](https://steveicarus.github.io/iverilog/index.html)
 
 # Disclaimer
 
-This project serves as a learning exercise with PyUVM.  The goal was to get hands-on experience with the library, rather than building a complete VIP.
+This project serves as a learning exercise with PyUVM. The goal was to get hands-on experience with the library, rather than building a complete VIP.
