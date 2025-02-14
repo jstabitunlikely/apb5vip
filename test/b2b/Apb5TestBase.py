@@ -43,20 +43,25 @@ class Apb5TestBase(uvm_test):
         requester_if.pruser = cocotb.top.PRUSER
         requester_if.pbuser = cocotb.top.PBUSER
 
-
     def build_phase(self):
         assert cocotb.top is not None
 
+        # APB5 Requester agent (active)
         self.requester_if = Apb5RequesterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
         self.connect_cocotb_to_vif(self.requester_if)
         ConfigDB().set(self, "*requester_agent*", "vif", self.requester_if)
 
+        # APB5 Completer agent (reactive)
         self.completer_if = Apb5CompleterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
         self.connect_cocotb_to_vif(self.completer_if)
         ConfigDB().set(self, "*completer_agent*", "vif", self.completer_if)
-        # TODO use a third, passive agent to collect coverage
-        ConfigDB().set(self, "*completer_agent*", "has_coverage", True)
 
+        # APB5 Completer agent (passive with coverage)
+        self.completer_cov_if = Apb5CompleterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
+        self.connect_cocotb_to_vif(self.completer_cov_if)
+        ConfigDB().set(self, "*completer_agent_cov*", "vif", self.completer_cov_if)
+
+        # Create the environment
         self.env = Apb5Env("apb5_env", self)
 
     def end_of_elaboration_phase(self):

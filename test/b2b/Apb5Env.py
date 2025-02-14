@@ -15,3 +15,8 @@ class Apb5Env(uvm_env):
         ConfigDB().set(self, "*completer_agent*", "is_active", True)
         ConfigDB().set(self, "*completer_agent*", "is_requester", False)
         self.completer_agent = Apb5Agent("completer_agent", self)
+
+        ConfigDB().set(self, "*completer_agent_cov*", "is_active", False)
+        ConfigDB().set(self, "*completer_agent_cov*", "is_requester", False)
+        ConfigDB().set(self, "*completer_agent_cov*", "has_coverage", True)
+        self.completer_agent_cov = Apb5Agent("completer_agent_cov", self)
