@@ -1,7 +1,7 @@
 import cocotb
 from cocotb.triggers import FallingEdge, RisingEdge, ClockCycles
 
-from pyuvm import uvm_component, ConfigDB
+from pyuvm import uvm_component
 from .Apb5Types import *
 from .Apb5Transfer import Apb5Transfer
 from .Apb5Interface import Apb5Interface
@@ -13,7 +13,7 @@ class Apb5Bfm(uvm_component):
         super().__init__(name, parent)
 
     def connect_phase(self):
-        self.vif = ConfigDB().get(None, self.get_full_name(), "vif")
+        self.vif = self.cdb_get("vif", self.get_full_name())
 
     async def run_phase(self):
         await self.reset()

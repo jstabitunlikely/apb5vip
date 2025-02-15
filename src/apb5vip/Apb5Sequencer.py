@@ -1,4 +1,4 @@
-from pyuvm import uvm_sequencer, uvm_tlm_analysis_fifo, ConfigDB
+from pyuvm import uvm_sequencer, uvm_tlm_analysis_fifo
 
 
 class Apb5Sequencer(uvm_sequencer):
@@ -8,4 +8,4 @@ class Apb5Sequencer(uvm_sequencer):
         self.request_fifo = uvm_tlm_analysis_fifo("request_fifo", self)
 
     def connect_phase(self):
-        self.vif = ConfigDB().get(None, self.get_full_name(), "vif")
+        self.vif = self.cdb_get("vif", self.get_full_name())

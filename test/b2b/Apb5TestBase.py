@@ -1,6 +1,6 @@
 import cocotb
 import pyuvm
-from pyuvm import uvm_test, ConfigDB
+from pyuvm import uvm_test
 
 from apb5vip import *
 from Apb5Env import Apb5Env
@@ -49,20 +49,20 @@ class Apb5TestBase(uvm_test):
         # APB5 Requester agent (active)
         self.requester_if = Apb5RequesterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
         self.connect_cocotb_to_vif(self.requester_if)
-        ConfigDB().set(self, "*requester_agent*", "vif", self.requester_if)
+        self.cdb_set(label="vif", value=self.requester_if, inst_path="env.requester_agent*")
 
         # APB5 Completer agent (reactive)
         self.completer_if = Apb5CompleterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
         self.connect_cocotb_to_vif(self.completer_if)
-        ConfigDB().set(self, "*completer_agent*", "vif", self.completer_if)
+        self.cdb_set(label="vif", value=self.completer_if, inst_path="env.completer_agent*")
 
         # APB5 Completer agent (passive with coverage)
         self.completer_cov_if = Apb5CompleterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
         self.connect_cocotb_to_vif(self.completer_cov_if)
-        ConfigDB().set(self, "*completer_agent_cov*", "vif", self.completer_cov_if)
+        self.cdb_set(label="vif", value=self.completer_cov_if, inst_path="env.completer_agent_cov*")
 
         # Create the environment
-        self.env = Apb5Env("apb5_env", self)
+        self.env = Apb5Env("env", self)
 
     def end_of_elaboration_phase(self):
         self.apb5_completer_seq = Apb5ReactiveSequence("apb5_completer_seq")

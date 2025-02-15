@@ -1,4 +1,4 @@
-from pyuvm import uvm_agent, ConfigDB
+from pyuvm import uvm_agent
 from .Apb5Driver import Apb5Driver
 from .Apb5Monitor import Apb5Monitor
 from .Apb5Sequencer import Apb5Sequencer
@@ -11,7 +11,7 @@ class Apb5Agent(uvm_agent):
 
     def build_phase(self):
         super().build_phase()
-        is_requester = ConfigDB().get(None, self.get_full_name(), "is_requester")
+        is_requester = self.cdb_get("is_requester", self.get_full_name())
         self.is_requester = bool(is_requester)
         if self.is_active:
             self.driver = Apb5Driver("driver", self, self.is_requester)

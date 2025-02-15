@@ -1,4 +1,4 @@
-from pyuvm import uvm_env, ConfigDB
+from pyuvm import uvm_env
 from apb5vip import *
 
 
@@ -8,15 +8,15 @@ class Apb5Env(uvm_env):
         super().__init__(name, parent)
 
     def build_phase(self):
-        ConfigDB().set(self, "*requester_agent*", "is_active", True)
-        ConfigDB().set(self, "*requester_agent*", "is_requester", True)
+        self.cdb_set(label="is_active", value=True, inst_path="requester_agent*")
+        self.cdb_set(label="is_requester", value=True, inst_path="requester_agent*")
         self.requester_agent = Apb5Agent("requester_agent", self)
 
-        ConfigDB().set(self, "*completer_agent*", "is_active", True)
-        ConfigDB().set(self, "*completer_agent*", "is_requester", False)
+        self.cdb_set(label="is_active", value=True, inst_path="completer_agent*")
+        self.cdb_set(label="is_requester", value=False, inst_path="completer_agent*")
         self.completer_agent = Apb5Agent("completer_agent", self)
 
-        ConfigDB().set(self, "*completer_agent_cov*", "is_active", False)
-        ConfigDB().set(self, "*completer_agent_cov*", "is_requester", False)
-        ConfigDB().set(self, "*completer_agent_cov*", "has_coverage", True)
+        self.cdb_set(label="is_active", value=False, inst_path="completer_agent_cov*")
+        self.cdb_set(label="is_requester", value=False, inst_path="completer_agent_cov*")
+        self.cdb_set(label="has_coverage", value=True, inst_path="completer_agent_cov*")
         self.completer_agent_cov = Apb5Agent("completer_agent_cov", self)

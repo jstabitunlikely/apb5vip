@@ -1,5 +1,5 @@
 import random
-from pyuvm import uvm_sequence_item, ConfigDB
+from pyuvm import uvm_sequence_item
 
 from .Apb5Types import *
 from .Apb5Interface import Apb5Interface

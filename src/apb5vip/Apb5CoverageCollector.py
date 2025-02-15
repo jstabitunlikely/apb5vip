@@ -1,5 +1,5 @@
 from math import ceil, floor, log2
-from pyuvm import uvm_subscriber, ConfigDB
+from pyuvm import uvm_subscriber
 from cocotb_coverage.coverage import CoverPoint, CoverCross, coverage_section, coverage_db
 from .Apb5Types import *
 from .Apb5Transfer import Apb5Transfer, Apb5Interface
@@ -152,7 +152,7 @@ class Apb5CoverageCollector(uvm_subscriber):
         super().__init__(name, parent)
 
     def build_phase(self):
-        vif = ConfigDB().get(None, self.get_full_name(), "vif")
+        vif = self.cdb_get("vif", self.get_full_name())
         assert isinstance(vif, Apb5Interface)
         self.transfer_coverage = Apb5TransferCoverage(vif)
 

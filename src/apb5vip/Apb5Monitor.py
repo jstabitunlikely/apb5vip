@@ -1,6 +1,6 @@
 import cocotb
 from cocotb.triggers import RisingEdge, FallingEdge, First
-from pyuvm import uvm_monitor, uvm_analysis_port, ConfigDB, UVMConfigItemNotFound
+from pyuvm import uvm_monitor, uvm_analysis_port, UVMConfigItemNotFound
 
 from .Apb5Types import *
 from .Apb5Transfer import Apb5Transfer
@@ -17,14 +17,15 @@ class Apb5Monitor(uvm_monitor):
 
     def build_phase(self):
         try:
-            self.has_coverage = ConfigDB().get(None, self.get_full_name(), "has_coverage")
+            self.has_coverage = self.cdb_get("has_coverage", self.get_full_name())
+
         except UVMConfigItemNotFound:
             self.has_coverage = False
         if self.has_coverage:
             self.coverage = Apb5CoverageCollector("coverage_collector", parent=self)
 
     def connect_phase(self):
-        self.vif = ConfigDB().get(None, self.get_full_name(), "vif")
+        self.vif = self.cdb_get("vif", self.get_full_name())
         if self.has_coverage:
             self.transfer_ap.connect(self.coverage.analysis_export)
 
