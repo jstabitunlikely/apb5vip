@@ -18,7 +18,6 @@ class Apb5Monitor(uvm_monitor):
     def build_phase(self):
         try:
             self.has_coverage = self.cdb_get("has_coverage", self.get_full_name())
-
         except UVMConfigItemNotFound:
             self.has_coverage = False
         if self.has_coverage:
@@ -68,7 +67,7 @@ class Apb5Monitor(uvm_monitor):
         assert isinstance(self.vif, Apb5Interface)
 
         # Wait one cycle for the Access phase and
-        #   for any additional Wait states inserted by the subordinate
+        #   for any additional Wait states inserted by the completer
         while True:
             await RisingEdge(self.vif.pclk)
             if self.vif.pready.value:
