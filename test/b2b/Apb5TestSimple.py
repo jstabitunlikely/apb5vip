@@ -18,6 +18,10 @@ class Apb5TestSimple(Apb5TestBase):
         await super().run_phase()
         self.raise_objection()
 
+        self.apb5_requester_seq.randomize_with(
+            lambda num_of_transfers: 750 <= num_of_transfers <= 1_000,
+        )
+
         requester_seqr = self.env.requester_agent.sequencer
         await self.apb5_requester_seq.start(requester_seqr)
 
