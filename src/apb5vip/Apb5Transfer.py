@@ -1,3 +1,4 @@
+from copy import deepcopy
 import random
 from pyuvm import uvm_sequence_item
 
@@ -127,6 +128,23 @@ class Apb5Transfer(uvm_sequence_item):
             self.request_delay == value.request_delay and
             self.response_delay == value.response_delay
         )
+
+    def __deepcopy__(self, memo):
+        cpy = Apb5Transfer(self.get_name(), self.vif)
+        cpy.address = self.address
+        cpy.protection = deepcopy(self.protection, memo)
+        cpy.direction = self.direction
+        cpy.data = self.data
+        cpy.strobe = self.strobe
+        cpy.wakeup_mode = self.wakeup_mode
+        cpy.auser = self.auser
+        cpy.wuser = self.wuser
+        cpy.response = self.response
+        cpy.ruser = self.ruser
+        cpy.buser = self.buser
+        cpy.request_delay = self.request_delay
+        cpy.response_delay = self.response_delay
+        return cpy
 
     def __hash__(self):
         return hash((
