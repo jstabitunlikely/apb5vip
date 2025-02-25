@@ -4,6 +4,7 @@ from .Apb5Driver import Apb5Driver
 from .Apb5Interface import Apb5Interface, Apb5RequesterInterface, Apb5CompleterInterface
 from .Apb5Monitor import Apb5Monitor
 from .Apb5ReactiveSequence import Apb5ReactiveSequence
+from .Apb5RegAdapter import Apb5RegAdapter
 from .Apb5Sequence import Apb5Sequence
 from .Apb5Transfer import Apb5Transfer
 from .Apb5Types import *
@@ -17,6 +18,7 @@ __all__ = [
     "Apb5Interface",
     "Apb5Monitor",
     "Apb5ReactiveSequence",
+    "Apb5RegAdapter",
     "Apb5RequesterBfm",
     "Apb5RequesterInterface",
     "Apb5Sequence",
