@@ -26,7 +26,8 @@ class Apb5TestBase(uvm_test):
         requester_if.USER_REQ_WIDTH = int(cocotb.top.USER_REQ_WIDTH.value)
         requester_if.USER_DATA_WIDTH = int(cocotb.top.USER_DATA_WIDTH.value)
         requester_if.USER_RESP_WIDTH = int(cocotb.top.USER_RESP_WIDTH.value)
-        requester_if.pwakeup = cocotb.top.PWAKEUP
+        if requester_if.WAKEUP_SUPPORT:
+            requester_if.pwakeup = cocotb.top.PWAKEUP
         requester_if.psel = cocotb.top.PSEL
         requester_if.penable = cocotb.top.PENABLE
         requester_if.paddr = cocotb.top.PADDR
@@ -34,14 +35,18 @@ class Apb5TestBase(uvm_test):
         requester_if.pwdata = cocotb.top.PWDATA
         requester_if.pstrb = cocotb.top.PSTRB
         requester_if.pprot = cocotb.top.PPROT
-        requester_if.pnse = cocotb.top.PNSE
+        if requester_if.RME_SUPPORT:
+            requester_if.pnse = cocotb.top.PNSE
         requester_if.prdata = cocotb.top.PRDATA
         requester_if.pslverr = cocotb.top.PSLVERR
         requester_if.pready = cocotb.top.PREADY
-        requester_if.pauser = cocotb.top.PAUSER
-        requester_if.pwuser = cocotb.top.PWUSER
-        requester_if.pruser = cocotb.top.PRUSER
-        requester_if.pbuser = cocotb.top.PBUSER
+        if requester_if.USER_REQ_WIDTH:
+            requester_if.pauser = cocotb.top.PAUSER
+        if requester_if.USER_DATA_WIDTH:
+            requester_if.pwuser = cocotb.top.PWUSER
+            requester_if.pruser = cocotb.top.PRUSER
+        if requester_if.USER_RESP_WIDTH:
+            requester_if.pbuser = cocotb.top.PBUSER
 
     def build_phase(self):
         assert cocotb.top is not None
@@ -50,6 +55,7 @@ class Apb5TestBase(uvm_test):
         self.requester_if = Apb5RequesterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
         self.connect_cocotb_to_vif(self.requester_if)
         self.cdb_set(label="vif", value=self.requester_if, inst_path="env.requester_agent*")
+        self.cdb_set(label="vif", value=self.requester_if, inst_path="env*")
 
         # APB5 Completer agent (reactive)
         self.completer_if = Apb5CompleterInterface(cocotb.top.PCLK, cocotb.top.PRESETN)
